@@ -406,7 +406,7 @@ Get weather (simple): (Invoke-RestMethod "wttr.in?format=3").Trim()
 
 Reverse file content: (Get-Content C:\file.txt) | ForEach-Object { $r = $_ + $r }; $r | Out-File C:\reversed.txt
 
-Simulate typing: 'Hello' | ForEach-Object { [Console]::Write($_); Start-Sleep -Milliseconds 100 }
+'Hello' | ForEach-Object { $_.ToCharArray() | ForEach-Object { [Console]::Write($_); Start-Sleep -Milliseconds 100 } }
 
 Get random quote: (Invoke-RestMethod 'https://api.quotable.io/random').content
 
