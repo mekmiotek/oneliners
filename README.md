@@ -206,7 +206,7 @@ Sort array: $a = 3,1,2; $a | Sort-Object
 
 Get public IP: (Invoke-RestMethod -Uri 'https://api.ipify.org?format=json').ip
 
-Display a progress bar: 1..100 | ForEach-Object { Write-Progress -Activity 'Processing' -Status "$_%" -PercentComplete $_; Start-Sleep -Milliseconds 50 }
+1..100 | ForEach-Object { Write-Progress -Activity 'Processing' -Status "$_%" -PercentComplete $_; Start-Sleep -Milliseconds 50 }
 
 String and Data Manipulation
 Capitalize first letter: 'hello' | ForEach-Object { $_.Substring(0,1).ToUpper() + $_.Substring(1) }
