@@ -208,3 +208,214 @@ Get public IP: (Invoke-RestMethod -Uri 'https://api.ipify.org?format=json').ip
 
 Display a progress bar: 1..100 | ForEach-Object { Write-Progress -Activity 'Processing' -Status "$_%" -PercentComplete $_; Start-Sleep -Milliseconds 50 }
 
+String and Data Manipulation
+Capitalize first letter: 'hello' | ForEach-Object { $_.Substring(0,1).ToUpper() + $_.Substring(1) }
+
+Remove duplicates from array: $a = 1,2,2,3; $a | Sort-Object -Unique
+
+Pad string with zeros: '42' | ForEach-Object { $_.PadLeft(5, '0') }
+
+Extract numbers from string: 'abc123def' -replace '[^\d]'
+
+Count vowels in string: ('hello' -split '' | Where-Object { $_ -match '[aeiou]' }).Count
+
+Reverse words in sentence: ('Hello World' -split ' ' | ForEach-Object { $r = $_ + ' ' + $r }; $r.Trim())
+
+Generate GUID: [Guid]::NewGuid().ToString()
+
+Check if string is palindrome: $s = 'radar'; $s -eq ($s[-1..-($s.Length)] -join '')
+
+Convert string to ASCII values: 'Hello' | ForEach-Object { [int[]][char[]]$_ }
+
+Mask string (e.g., password): 'password' | ForEach-Object { '*' * $_.Length }
+
+File and Directory Operations
+List hidden files: Get-ChildItem -Path C:\ -Hidden -File
+
+Get largest file in folder: Get-ChildItem -Path C:\ -File | Sort-Object Length -Descending | Select-Object -First 1
+
+Copy files modified today: Get-ChildItem -Path C:\ | Where-Object { $_.LastWriteTime -gt (Get-Date).Date } | Copy-Item -Destination D:\
+
+Find duplicate files by hash: Get-ChildItem -Path C:\ -File | Group-Object { (Get-FileHash $_.FullName).Hash } | Where-Object { $_.Count -gt 1 }
+
+Move files by extension: Get-ChildItem -Path C:\ *.txt | Move-Item -Destination C:\TextFiles
+
+Get folder size (MB): (Get-ChildItem -Path C:\ -Recurse | Measure-Object -Property Length -Sum).Sum / 1MB
+
+List empty folders: Get-ChildItem -Path C:\ -Directory | Where-Object { (Get-ChildItem $_.FullName) -eq $null }
+
+Append text to file: 'New line' | Add-Content -Path C:\file.txt
+
+Search file content: Select-String -Path C:\*.txt -Pattern 'error'
+
+Backup a folder: Copy-Item -Path C:\folder -Destination "C:\backup_$(Get-Date -Format 'yyyyMMdd')" -Recurse
+
+System Information
+Get motherboard info: Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer, Product
+
+List USB devices: Get-CimInstance -ClassName Win32_USBControllerDevice | ForEach-Object { [wmi]$_.Dependent }
+
+Get GPU info: Get-CimInstance -ClassName Win32_VideoController | Select-Object Name, AdapterRAM
+
+Check battery status: (Get-CimInstance -ClassName Win32_Battery).BatteryStatus
+
+Get system boot time: (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
+
+List environment variables: Get-ChildItem Env:
+
+Get CPU temperature (if supported): Get-CimInstance -Namespace root\WMI -ClassName MSAcpi_ThermalZoneTemperature
+
+Get BIOS version: (Get-CimInstance -ClassName Win32_BIOS).SMBIOSBIOSVersion
+
+List hotfixes: Get-HotFix | Select-Object HotFixID, InstalledOn
+
+Get system serial number: (Get-CimInstance -ClassName Win32_BIOS).SerialNumber
+
+Network Utilities
+Get default gateway: (Get-NetRoute -DestinationPrefix '0.0.0.0/0').NextHop
+
+List active connections: Get-NetTCPConnection | Where-Object { $_.State -eq 'Established' }
+
+Get network usage (bytes sent): (Get-NetAdapterStatistics).SentBytes
+
+Enable DHCP on adapter: Set-NetIPInterface -InterfaceAlias 'Ethernet' -Dhcp Enabled
+
+Set static IP: New-NetIPAddress -InterfaceAlias 'Ethernet' -IPAddress '192.168.1.100' -PrefixLength 24 -DefaultGateway '192.168.1.1'
+
+Restart network adapter: Restart-NetAdapter -Name 'Ethernet'
+
+Get Wi-Fi profiles: netsh wlan show profiles
+
+Export Wi-Fi profile: netsh wlan export profile name='MyWiFi' folder=C:\
+
+Get proxy settings: (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings').ProxyServer
+
+Trace route: Test-NetConnection -ComputerName google.com -TraceRoute
+
+Process and Task Management
+Kill processes over 1GB memory: Get-Process | Where-Object { $_.WS -gt 1GB } | Stop-Process -Force
+
+List processes by company: Get-Process | Group-Object Company
+
+Get process start time: (Get-Process -Name notepad).StartTime
+
+Run command as another user: Start-Process -FilePath cmd.exe -Credential (Get-Credential)
+
+Get service dependencies: Get-Service -Name spooler -RequiredServices
+
+List services by start type: Get-Service | Group-Object StartType
+
+Create scheduled task (daily): Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute 'notepad') -Trigger (New-ScheduledTaskTrigger -Daily -At '9AM') -TaskName 'DailyNote'
+
+Export scheduled tasks: Get-ScheduledTask | Export-ScheduledTask
+
+Get process path: (Get-Process -Name notepad).Path
+
+Monitor process start: Register-WmiEvent -Query "SELECT * FROM Win32_ProcessStartTrace" -Action { Write-Host "$($event.SourceEventArgs.NewEvent.ProcessName) started" }
+
+User and Security
+List all groups: Get-LocalGroup
+
+Remove user from group: Remove-LocalGroupMember -Group 'Administrators' -Member 'TestUser'
+
+Get SID of current user: [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+
+Enable guest account: Enable-LocalUser -Name 'Guest'
+
+Disable UAC (requires restart): Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'EnableLUA' -Value 0
+
+Get firewall rules: Get-NetFirewallRule | Where-Object { $_.Enabled -eq $true }
+
+Block IP in firewall: New-NetFirewallRule -Name 'BlockIP' -Direction Inbound -Action Block -RemoteAddress '192.168.1.100'
+
+Get BitLocker status: (Get-BitLockerVolume -MountPoint C:).ProtectionStatus
+
+List shadow copies: Get-CimInstance -ClassName Win32_ShadowCopy
+
+Create shadow copy: wmic shadowcopy create Volume=C:\
+
+Date and Time
+Get UTC time: (Get-Date).ToUniversalTime()
+
+Subtract hours: (Get-Date).AddHours(-3)
+
+Get first day of month: (Get-Date -Day 1).Date
+
+Get last day of month: (Get-Date -Day 1).AddMonths(1).AddDays(-1).Date
+
+Convert to epoch seconds: [int64]((Get-Date) - (Get-Date '1970-01-01')).TotalSeconds
+
+Get week number: (Get-Date).DayOfYear / 7 -as [int]
+
+Set time zone: Set-TimeZone -Id 'Pacific Standard Time'
+
+Compare dates: (Get-Date '2025-01-01') -gt (Get-Date)
+
+Get sunrise/sunset (approx): Invoke-RestMethod "https://api.sunrise-sunset.org/json?lat=40&lng=-74" | Select-Object -Property sunrise, sunset
+
+Log time to file: Get-Date | Out-File -FilePath C:\log.txt -Append
+
+Miscellaneous Utilities
+Generate random color hex: '#{0:X6}' -f (Get-Random -Minimum 0 -Maximum 16777215)
+
+Convert CSV to object: Import-Csv -Path C:\data.csv
+
+Export to CSV: Get-Process | Export-Csv -Path C:\processes.csv -NoTypeInformation
+
+Encrypt a file: Protect-CmsMessage -To '*self*' -Content (Get-Content C:\file.txt -Raw) | Out-File C:\encrypted.txt
+
+Decrypt a file: Unprotect-CmsMessage -Path C:\encrypted.txt | Out-File C:\decrypted.txt
+
+Generate lorem ipsum: -join ((65..90) | Get-Random -Count 50 | ForEach-Object { [char]$_ })
+
+Count lines in file: (Get-Content -Path C:\file.txt).Count
+
+Convert to binary: [Convert]::ToString(42, 2)
+
+Convert from binary: [Convert]::ToInt32('101010', 2)
+
+Check PowerShell version: $PSVersionTable.PSVersion
+
+System Maintenance
+Get pending reboots: (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update').RebootRequired
+
+List installed drivers: Get-WindowsDriver -Online
+
+Uninstall software: Get-CimInstance -ClassName Win32_Product -Filter "Name='AppName'" | Invoke-CimMethod -MethodName Uninstall
+
+Clear event log: Clear-EventLog -LogName Application
+
+Get system uptime in days: ((Get-Date) - (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime).Days
+
+Check memory usage %: 100 * (Get-CimInstance Win32_OperatingSystem).TotalVisibleMemorySize / (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory
+
+List startup programs: Get-CimInstance -ClassName Win32_StartupCommand
+
+Disable startup program: Remove-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'ProgramName'
+
+Get disk SMART status: (Get-Disk).OperationalStatus
+
+Run disk cleanup: cleanmgr /sagerun:1
+
+Fun and Cool Tricks
+Display rainbow text: 'Hello' | ForEach-Object { $i=0; [char[]]$_ | ForEach-Object { Write-Host $_ -ForegroundColor ($i++ % 15) -NoNewline } }
+
+Play a tune (beeps): 500,300,400,200 | ForEach-Object { [Console]::Beep($_, 200) }
+
+Get weather (simple): (Invoke-RestMethod "wttr.in?format=3").Trim()
+
+Reverse file content: (Get-Content C:\file.txt) | ForEach-Object { $r = $_ + $r }; $r | Out-File C:\reversed.txt
+
+Simulate typing: 'Hello' | ForEach-Object { [Console]::Write($_); Start-Sleep -Milliseconds 100 }
+
+Get random quote: (Invoke-RestMethod 'https://api.quotable.io/random').content
+
+Create shortcut: New-Item -ItemType SymbolicLink -Path C:\link -Target C:\target
+
+List fonts: (New-Object System.Drawing.Text.InstalledFontCollection).Families
+
+Get screen resolution: (Get-CimInstance -ClassName Win32_VideoController).CurrentHorizontalResolution
+
+Flash console window: 1..5 | ForEach-Object { [Console]::Beep(800, 100); Start-Sleep -Milliseconds 200 }
+
+
