@@ -598,6 +598,3 @@ while ($true) {
     Write-Host "" # New line
     Start-Sleep -Milliseconds 50 # Faster for smoother effect
 }
-311. Create a simple calculator - $a = Read-Host "Enter first number"; $b = Read-Host "Enter second number"; Write-Host "Sum: $($a + $b)"
-312. Display a random fact - $facts = 'Honey never spoils.', 'Octopuses have three hearts.'; Write-Host ($facts | Get-Random)
-313. Create a simple game (guess the number) - $number = Get-Random -Minimum 1 -Maximum 10; do { $guess = Read-Host "Guess the number (1-10)"; } while ($guess -ne $number); Write-Host "You guessed it!"
