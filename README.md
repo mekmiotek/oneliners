@@ -408,8 +408,8 @@ Remove-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run' 
 cleanmgr /sagerun:1
 
 # Fun and Cool Tricks
-# 191. Display ASCII art - This doesnt work :(
-'Hello' | ForEach-Object { [char[]]$_ | ForEach-Object { Write-Host $_ -NoNewline } }
+# 191. Create starfield pattern with *
+1..10 | ForEach-Object { Write-Host (" " * (Get-Random -Max 20) + "*" * (Get-Random -Min 1 -Max 5)) }
 # 192. Play a beep sound
 [Console]::Beep(500, 1000)
 # 193. Get clipboard content
