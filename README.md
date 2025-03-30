@@ -325,7 +325,7 @@ Measure-Command { Start-Sleep -Seconds 2 }
 # 151. Get week number
 (Get-Date).DayOfYear / 7 -as [int]
 # 152. Set time zone
-Set-TimeZone -Id 'Pacific Standard Time'
+Set-TimeZone -Id 'Eastern Standard Time'
 # 153. Compare dates
 (Get-Date '2025-01-01') -gt (Get-Date)
 # 154. Get sunrise/sunset (approx)
