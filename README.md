@@ -445,3 +445,134 @@ Install-Module -Name QRCodeGenerator; New-QRCode -Content 'https://example.com' 
     Clear-Host  # Restores original colors
     Start-Sleep -Milliseconds 200
 }
+Registry Operations
+204. List all registry keys in a path - Get-ChildItem -Path HKLM:\Software
+205. Create a new registry key - New-Item -Path HKLM:\Software\MyApp -Force
+206. Set a registry value - Set-ItemProperty -Path HKLM:\Software\MyApp -Name "Version" -Value "1.0"
+207. Get a specific registry value - (Get-ItemProperty -Path HKLM:\Software\MyApp).Version
+208. Delete a registry key - Remove-Item -Path HKLM:\Software\MyApp -Recurse -Force
+209. Check if a registry key exists - Test-Path -Path HKLM:\Software\MyApp
+210. Export registry key to file - reg export HKLM\Software\MyApp C:\backup.reg
+211. Import registry key from file - reg import C:\backup.reg
+212. List subkeys of a registry key - (Get-Item -Path HKLM:\Software).GetSubKeyNames()
+213. Backup a registry hive - reg save HKLM\Software C:\software.hiv
+
+PowerShell Profiles and Modules
+214. Open PowerShell profile for editing - notepad $PROFILE
+215. Reload PowerShell profile - . $PROFILE
+216. List all installed PowerShell modules - Get-Module -ListAvailable
+217. Install a PowerShell module from gallery - Install-Module -Name Pester -Force
+218. Update a specific PowerShell module - Update-Module -Name Pester
+219. Uninstall a PowerShell module - Uninstall-Module -Name Pester
+220. Get commands in a module - Get-Command -Module Pester
+221. Import a module manually - Import-Module -Name C:\Modules\MyModule.psm1
+222. Create a new PowerShell module manifest - New-ModuleManifest -Path C:\Modules\MyModule.psd1
+223. List all PowerShell sessions - Get-PSSession
+
+Event and Logging
+224. Create a new event log source - New-EventLog -LogName Application -Source MyApp
+225. Write to event log - Write-EventLog -LogName Application -Source MyApp -EventId 1000 -Message "Test event"
+226. Get latest 5 application logs - Get-EventLog -LogName Application -Newest 5
+227. Export event logs to CSV - Get-EventLog -LogName System | Export-Csv -Path C:\systemlogs.csv -NoTypeInformation
+228. Clear all event logs - Get-EventLog -List | ForEach-Object { Clear-EventLog -LogName $_.Log }
+229. Monitor event log for new entries - Register-EngineEvent -SourceIdentifier "NewEvent" -Action { Write-Host "New event detected!" }
+230. Get event log sources - (Get-EventLog -LogName Application).Entries | Select-Object -ExpandProperty Source -Unique
+231. Search event logs by message - Get-EventLog -LogName System | Where-Object { $_.Message -like "*error*" }
+232. Get event log entry by ID - Get-EventLog -LogName System | Where-Object { $_.EventID -eq 1000 }
+233. List event log categories - (Get-EventLog -LogName System).Entries | Select-Object -ExpandProperty Category -Unique
+
+Performance Monitoring
+234. Get CPU usage percentage - (Get-Counter '\Processor(_Total)\% Processor Time').CounterSamples.CookedValue
+235. Monitor memory usage over time - 1..5 | ForEach-Object { (Get-Counter '\Memory\Available MBytes').CounterSamples.CookedValue; Start-Sleep -Seconds 1 }
+236. List top 5 processes by handle count - Get-Process | Sort-Object HandleCount -Descending | Select-Object -First 5
+237. Get disk I/O statistics - (Get-Counter '\PhysicalDisk(_Total)\Disk Bytes/sec').CounterSamples.CookedValue
+238. Check network bandwidth usage - (Get-Counter '\Network Interface(*)\Bytes Total/sec').CounterSamples.CookedValue
+239. Get system performance counters - Get-Counter -ListSet * | Select-Object CounterSetName
+240. Monitor a specific counter - Get-Counter -Counter '\Processor(_Total)\% Processor Time' -SampleInterval 2 -MaxSamples 3
+241. Export performance data to file - Get-Counter -Counter '\Processor(_Total)\% Processor Time' | Export-Counter -Path C:\perf.blg
+242. Get system idle time - (Get-Counter '\System\System Up Time').CounterSamples.CookedValue
+243. List processes with high CPU usage - Get-Process | Where-Object { $_.CPU -gt 1000 }
+
+Remote Management
+244. Connect to a remote PowerShell session - Enter-PSSession -ComputerName RemotePC
+245. Run a command on a remote computer - Invoke-Command -ComputerName RemotePC -ScriptBlock { Get-Process }
+246. Copy a file to a remote computer - Copy-Item -Path C:\file.txt -Destination \\RemotePC\C$\file.txt
+247. Restart a remote computer - Restart-Computer -ComputerName RemotePC -Force
+248. Get remote system info - Invoke-Command -ComputerName RemotePC -ScriptBlock { Get-CimInstance -ClassName Win32_OperatingSystem }
+249. Enable PSRemoting on a remote machine - Enable-PSRemoting -Force
+250. List all remote sessions - Get-PSSession | Select-Object ComputerName, State
+251. Disconnect a remote session - Disconnect-PSSession -Name Session1
+252. Run a script on multiple remote PCs - Invoke-Command -ComputerName PC1,PC2 -FilePath C:\script.ps1
+253. Check remote computer uptime - Invoke-Command -ComputerName RemotePC -ScriptBlock { (Get-Date) - (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime }
+
+Advanced File Operations
+254. Find files larger than 100MB - Get-ChildItem -Path C:\ -File | Where-Object { $_.Length -gt 100MB }
+255. List files by creation date - Get-ChildItem -Path C:\ | Sort-Object CreationTime
+256. Replace text in multiple files - Get-ChildItem -Path C:\*.txt | ForEach-Object { (Get-Content $_.FullName) -replace 'old', 'new' | Set-Content $_.FullName }
+257. Get file encoding - (Get-Content -Path C:\file.txt -Raw | Select-String .).Encoding
+258. Convert file encoding to UTF-8 - Get-Content -Path C:\file.txt | Set-Content -Path C:\file_utf8.txt -Encoding UTF8
+259. List files with specific attributes - Get-ChildItem -Path C:\ -File | Where-Object { $_.Attributes -match 'ReadOnly' }
+260. Lock a file (prevent access) - $file = [System.IO.File]::Open('C:\file.txt', 'Open', 'Read', 'None')
+261. Unlock a file - $file.Close()
+262. Get file version info - (Get-Item -Path C:\file.exe).VersionInfo
+263. Split a large file into parts - $content = Get-Content -Path C:\largefile.txt; $chunkSize = 1000; for ($i = 0; $i -lt $content.Count; $i += $chunkSize) { $content[$i..($i + $chunkSize - 1)] | Out-File "C:\part$($i / $chunkSize).txt" }
+
+System Configuration
+264. Enable Remote Desktop - Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 0
+265. Disable Remote Desktop - Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 1
+266. Set power plan to high performance - powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+267. List all power plans - powercfg /list
+268. Change screen brightness (0-100) - (Get-WmiObject -Namespace root\WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1, 50)
+269. Disable Windows Defender real-time protection - Set-MpPreference -DisableRealtimeMonitoring $true
+270. Enable Windows Defender real-time protection - Set-MpPreference -DisableRealtimeMonitoring $false
+271. Set wallpaper - Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name 'Wallpaper' -Value 'C:\wallpaper.jpg'; rundll32.exe user32.dll, UpdatePerUserSystemParameters
+272. Get current power state - (Get-CimInstance -ClassName Win32_ComputerSystem).PowerState
+273. Enable firewall - Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+Security and Encryption
+274. Generate a self-signed certificate - New-SelfSignedCertificate -DnsName "localhost" -CertStoreLocation "Cert:\LocalMachine\My"
+275. Export a certificate to file - Export-Certificate -Cert (Get-Item Cert:\LocalMachine\My\Thumbprint) -FilePath C:\cert.cer
+276. Import a certificate - Import-Certificate -FilePath C:\cert.cer -CertStoreLocation Cert:\LocalMachine\My
+277. List all certificates in store - Get-ChildItem -Path Cert:\LocalMachine\My
+278. Encrypt a string with AES - $key = (1..32); $encrypted = ConvertTo-SecureString 'Secret' -AsPlainText -Force | ConvertFrom-SecureString -Key $key; $encrypted
+279. Decrypt an AES-encrypted string - $key = (1..32); $decrypted = ConvertTo-SecureString $encrypted -Key $key | ConvertFrom-SecureString -AsPlainText; $decrypted
+280. Get current user’s security token - [System.Security.Principal.WindowsIdentity]::GetCurrent().AccessToken
+281. List all security policies - Get-CimInstance -ClassName Win32_SecuritySetting
+282. Enable secure boot (if supported) - Confirm-SecureBootUEFI
+283. Check if TPM is enabled - (Get-WmiObject -Namespace root\cimv2\Security\MicrosoftTpm -Class Win32_Tpm).IsEnabled()
+
+Automation and Scripting
+284. Create a script to run at startup - $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-File C:\script.ps1'; $trigger = New-ScheduledTaskTrigger -AtStartup; Register-ScheduledTask -TaskName 'StartupScript' -Action $action -Trigger $trigger
+285. List all aliases - Get-Alias
+286. Create a new alias - Set-Alias -Name ll -Value Get-ChildItem
+287. Remove an alias - Remove-Item -Path Alias:ll
+288. Get command history - Get-History
+289. Export command history to file - Get-History | Export-Clixml -Path C:\history.xml
+290. Import command history from file - Import-Clixml -Path C:\history.xml | Add-History
+291. Clear command history - Clear-History
+292. Run a command with elevated privileges - Start-Process powershell -Verb RunAs -ArgumentList '-Command "Get-Process"'
+293. Create a transcript of session - Start-Transcript -Path C:\transcript.txt
+
+Advanced Network Operations
+294. Get current network profile - (Get-NetConnectionProfile).NetworkCategory
+295. Set network profile to private - Set-NetConnectionProfile -InterfaceAlias 'Ethernet' -NetworkCategory Private
+296. Enable network discovery - Set-NetFirewallRule -DisplayGroup 'Network Discovery' -Enabled True
+297. Disable network discovery - Set-NetFirewallRule -DisplayGroup 'Network Discovery' -Enabled False
+298. Get network latency to a host - (Test-Connection -ComputerName google.com -Count 1).ResponseTime
+299. List all network shares - Get-SmbShare
+300. Create a new network share - New-SmbShare -Name 'MyShare' -Path 'C:\Shared' -FullAccess Everyone
+301. Remove a network share - Remove-SmbShare -Name 'MyShare' -Force
+302. Get current VPN connections - Get-VpnConnection
+303. Disconnect a VPN connection - Disconnect-VpnConnection -Name 'MyVPN'
+
+Fun and Cool Tricks (Continued)
+304. Display a random ASCII art animal - $animals = '🐶','🐱','🐻'; Write-Host ($animals | Get-Random)
+305. Create a simple GUI message box - Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Hello, World!')
+306. Play a WAV file - (New-Object System.Media.SoundPlayer 'C:\sound.wav').PlaySync()
+307. Get a random emoji - $emojis = '😀','😂','😍'; $emojis | Get-Random
+308. Create a simple timer - $seconds = 10; 1..$seconds | ForEach-Object { Write-Host "$($seconds - $_) seconds remaining"; Start-Sleep -Seconds 1 }; Write-Host "Time's up!"
+309. Display a random color in console - $color = Get-Random -Minimum 1 -Maximum 15; Write-Host "Random Color!" -ForegroundColor $color
+310. Simulate a matrix-like effect - 1..20 | ForEach-Object { Write-Host (-join ((48..57) + (65..90) | Get-Random -Count 10 | ForEach-Object { [char]$_ })) -ForegroundColor Green; Start-Sleep -Milliseconds 100 }
+311. Create a simple calculator - $a = Read-Host "Enter first number"; $b = Read-Host "Enter second number"; Write-Host "Sum: $($a + $b)"
+312. Display a random fact - $facts = 'Honey never spoils.', 'Octopuses have three hearts.'; Write-Host ($facts | Get-Random)
+313. Create a simple game (guess the number) - $number = Get-Random -Minimum 1 -Maximum 10; do { $guess = Read-Host "Guess the number (1-10)"; } while ($guess -ne $number); Write-Host "You guessed it!"
