@@ -429,7 +429,7 @@ Install-Module -Name QRCodeGenerator; New-QRCode -Content 'https://example.com'
 # 200. Simulate typing
 'Hello' | ForEach-Object { $_.ToCharArray() | ForEach-Object { [Console]::Write($_); Start-Sleep -Milliseconds 100 } }
 # 201. Get random quote
-(Invoke-RestMethod 'https://api.quotable.io/random').content
+(Invoke-RestMethod 'https://api.quotable.io/random').content -SkipCertificateCheck
 # 202. List fonts
 (New-Object System.Drawing.Text.InstalledFontCollection).Families
 # 203. Flash console window
