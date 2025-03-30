@@ -1,7 +1,9 @@
 Windows Program Management
 1. Lists installed programs with details - Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate
+
 Process and DLL Monitoring
 2. Find processes using a specific DLL - ps | where { $_.Modules.modulename -ieq 'netapi32.dll' }
+
 Keyboard Automation
 3. Toggle Caps Lock 10 times with 200ms delay - $wshell = New-Object -ComObject WScript.Shell; 1..10 | ForEach-Object { $wshell.SendKeys("{CAPSLOCK}") ; Start-Sleep -Milliseconds 200 }
 String and Data Manipulation
