@@ -329,7 +329,7 @@ Set-TimeZone -Id 'Pacific Standard Time'
 # 153. Compare dates
 (Get-Date '2025-01-01') -gt (Get-Date)
 # 154. Get sunrise/sunset (approx)
-Invoke-RestMethod "https://api.sunrise-sunset.org/json?lat=40&lng=-74" | Select-Object -ExpandProperty results | Select-Object -Property sunrise, sunset
+Invoke-RestMethod "https://api.sunrise-sunset.org/json?lat=40&lng=-74" | Select-Object -ExpandProperty results | Select-Object @{Name='sunrise';Expression={[datetime]::Parse($_.sunrise, [System.Globalization.CultureInfo]::InvariantCulture).AddHours(-4)}}, @{Name='sunset';Expression={[datetime]::Parse($_.sunset, [System.Globalization.CultureInfo]::InvariantCulture).AddHours(-4)}}
 # 155. Log time to file
 Get-Date | Out-File -FilePath C:\log.txt -Append
 
