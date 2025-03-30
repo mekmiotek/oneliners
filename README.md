@@ -417,7 +417,7 @@ Get-Clipboard
 # 194. Set clipboard content
 'Hello' | Set-Clipboard
 # 195. Generate QR code (requires module)
-Install-Module -Name QRCodeGenerator; New-QRCode -Content 'https://example.com'
+Install-Module -Name QRCodeGenerator; New-QRCode -Content 'https://example.com' -FilePath 'c:\temp\examplecomqrcode.png'
 # 196. Display a progress bar
 1..100 | ForEach-Object { Write-Progress -Activity 'Processing' -Status "$_%" -PercentComplete $_; Start-Sleep -Milliseconds 50 }
 # 197. Display rainbow text
