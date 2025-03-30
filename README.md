@@ -572,7 +572,32 @@ Fun and Cool Tricks (Continued)
 307. Get a random emoji - $emojis = '😀','😂','😍'; $emojis | Get-Random
 308. Create a simple timer - $seconds = 10; 1..$seconds | ForEach-Object { Write-Host "$($seconds - $_) seconds remaining"; Start-Sleep -Seconds 1 }; Write-Host "Time's up!"
 309. Display a random color in console - $color = Get-Random -Minimum 1 -Maximum 15; Write-Host "Random Color!" -ForegroundColor $color
-310. Simulate a matrix-like effect - 1..20 | ForEach-Object { Write-Host (-join ((48..57) + (65..90) | Get-Random -Count 10 | ForEach-Object { [char]$_ })) -ForegroundColor Green; Start-Sleep -Milliseconds 100 }
+310. Simulate a matrix-like effect - # Set console to mimic Matrix aesthetic
+$Host.UI.RawUI.BackgroundColor = "Black"
+$Host.UI.RawUI.ForegroundColor = "Green"
+Clear-Host
+
+# Get console width for full-screen effect
+$width = $Host.UI.RawUI.WindowSize.Width
+
+# Run indefinitely (Ctrl+C to stop)
+while ($true) {
+    # Array to hold character positions
+    $line = @(" " * $width).ToCharArray()
+    
+    # Randomly place "falling" character streams
+    $columns = Get-Random -Minimum 5 -Maximum 15
+    for ($i = 0; $i -lt $columns; $i++) {
+        $pos = Get-Random -Minimum 0 -Maximum ($width - 1)
+        $chars = (48..57) + (65..90) + (97..122) # Numbers, uppercase, lowercase
+        $line[$pos] = [char](Get-Random -InputObject $chars)
+    }
+    
+    # Print the line and pause briefly
+    Write-Host (-join $line) -ForegroundColor Green -NoNewline
+    Write-Host "" # New line
+    Start-Sleep -Milliseconds 50 # Faster for smoother effect
+}
 311. Create a simple calculator - $a = Read-Host "Enter first number"; $b = Read-Host "Enter second number"; Write-Host "Sum: $($a + $b)"
 312. Display a random fact - $facts = 'Honey never spoils.', 'Octopuses have three hearts.'; Write-Host ($facts | Get-Random)
 313. Create a simple game (guess the number) - $number = Get-Random -Minimum 1 -Maximum 10; do { $guess = Read-Host "Guess the number (1-10)"; } while ($guess -ne $number); Write-Host "You guessed it!"
