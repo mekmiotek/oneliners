@@ -1,6 +1,6 @@
 # PowerShell Utilities and Commands
 
-A collection of useful PowerShell commands organized by category, all in one code block.
+A collection of useful PowerShell 1 liners (mostly).
 
 ```powershell
 # Windows Program Management
