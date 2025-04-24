@@ -608,3 +608,5 @@ Get-Process  -PipelineVariable process | ForEach-Object {
       }
      }
 }
+312. Make a deep folder structure & quit when it fails
+1..100|% { $d = "Guy $_" ; $null = md $d ; if( $? ) { cd $d } else { break } }
