@@ -598,3 +598,13 @@ while ($true) {
     Write-Host "" # New line
     Start-Sleep -Milliseconds 50 # Faster for smoother effect
 }
+311. Show what .NET runtime versions in use by all processes
+Get-Process  -PipelineVariable process | ForEach-Object {
+   $_.Modules | Where-Object { $_.ModuleName -match "(clr\.dll|\.CoreLib\.dll)$" } | ForEach-Object {
+      [PSCustomObject]@{
+          Process  = $process.Path
+          File = $_.ModuleName
+          Version  = $_.FileVersionInfo.ProductVersion
+      }
+     }
+}
