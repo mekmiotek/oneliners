@@ -599,14 +599,16 @@ while ($true) {
     Start-Sleep -Milliseconds 50 # Faster for smoother effect
 }
 311. Show what .NET runtime versions in use by all processes
-Get-Process  -PipelineVariable process | ForEach-Object {
-   $_.Modules | Where-Object { $_.ModuleName -match "(clr\.dll|\.CoreLib\.dll)$" } | ForEach-Object {
-      [PSCustomObject]@{
-          Process  = $process.Path
-          File = $_.ModuleName
-          Version  = $_.FileVersionInfo.ProductVersion
-      }
-     }
+$index = 1
+Get-Process -PipelineVariable process | ForEach-Object {
+    $_.Modules | Where-Object { $_.ModuleName -match "(clr\.dll|\.CoreLib\.dll)$" } | ForEach-Object {
+        [PSCustomObject]@{
+            Index    = $index++
+            Process  = $process.Path
+            File     = $_.ModuleName
+            Version  = $_.FileVersionInfo.ProductVersion
+        }
+    }
 }
 312. Make a deep folder structure & quit when it fails
 1..100|% { $d = "Guy $_" ; $null = md $d ; if( $? ) { cd $d } else { break } }
