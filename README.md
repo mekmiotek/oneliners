@@ -612,3 +612,5 @@ Get-Process -PipelineVariable process | ForEach-Object {
 }
 312. Make a deep folder structure & quit when it fails
 1..100|% { $d = "Guy $_" ; $null = md $d ; if( $? ) { cd $d } else { break } }
+313. reverse each character in a file and output to a file
+-join ((Get-Content C:\file.txt -Raw).ToCharArray() | Select-Object -Last (Get-Content C:\file.txt -Raw).Length) | Out-File C:\reversed.txt
